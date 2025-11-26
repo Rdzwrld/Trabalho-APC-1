@@ -1,13 +1,30 @@
-#include <stdio.h>
+ #include <stdio.h>
 #include <string.h>
 #include <locale.h>
-
+#include <ctype.h>
 
 typedef struct {
     char nome[50];
     char autor[50];
     int ano;
 } Livro;
+
+int validarString(char *str) {
+    int i;
+    int apenasEspacos = 1;
+    
+    if (strlen(str) == 0) return 0; 
+
+    for (i = 0; str[i] != '\0'; i++) {
+        if (!isspace((unsigned char)str[i])) {
+            apenasEspacos = 0; 
+            break;
+        }
+    }
+
+    if (apenasEspacos) return 0; 
+    return 1; 
+}
 
 int main() {
     setlocale(LC_ALL, "Portuguese");
@@ -16,10 +33,11 @@ int main() {
     int quantidade = 0;
     int opcao = 0; 
     int i, Excluir;
-    int validacao; 
+    int validacao;
+    char bufferAno[50];
+    int anoValido;
 
     do {
-        
         printf("\n--- SISTEMA DE BIBLIOTECA ---\n");
         printf("1. Cadastrar livros\n");
         printf("2. Excluir livros cadastrados\n");
@@ -27,20 +45,14 @@ int main() {
         printf("4. Sair\n");
         printf("Escolha uma opcao: ");
 
-        
         validacao = scanf("%d", &opcao);
 
-        
         if (validacao == 0) {
             printf("\nOpcao invalida! Tente novamente.\n");
-            
-            
             while(getchar() != '\n'); 
-            
             continue; 
         }
 
-        
         getchar(); 
 
         switch (opcao) {
@@ -50,24 +62,47 @@ int main() {
                 } else {
                     printf("\n--- CADASTRO DE LIVRO ---\n");
                     
-                    printf("Nome do livro: ");
-                    scanf("%49[^\n]", biblioteca[quantidade].nome);
-                    getchar();
+                    do {
+                        printf("Nome do livro: ");
+                        fgets(biblioteca[quantidade].nome, 50, stdin);
+                        
+                        biblioteca[quantidade].nome[strcspn(biblioteca[quantidade].nome, "\n")] = 0;
+
+                        if (!validarString(biblioteca[quantidade].nome)) {
+                            printf("ERRO: O nome nao pode ser vazio ou conter apenas espacos.\n");
+                        }
+                    } while (!validarString(biblioteca[quantidade].nome));
                     
-                    printf("Nome do autor: ");
-                    scanf("%49[^\n]", biblioteca[quantidade].autor);
-                    getchar();
+                    do {
+                        printf("Nome do autor: ");
+                        fgets(biblioteca[quantidade].autor, 50, stdin);
+                        
+                        biblioteca[quantidade].autor[strcspn(biblioteca[quantidade].autor, "\n")] = 0;
+
+                        if (!validarString(biblioteca[quantidade].autor)) {
+                            printf("ERRO: O autor nao pode ser vazio ou conter apenas espacos.\n");
+                        }
+                    } while (!validarString(biblioteca[quantidade].autor));
                     
-                    printf("Ano de lancamento: ");
-                    
-                    if(scanf("%d", &biblioteca[quantidade].ano) == 0) {
-                        printf("Ano invalido! Cadastro cancelado.\n");
-                        while(getchar() != '\n');
-                    } else {
-                        quantidade++;
-                        printf("Livro cadastrado com sucesso!\n");
-                        getchar();
-                    }
+                    do {
+                        anoValido = 0;
+                        printf("Ano de lancamento: ");
+                        fgets(bufferAno, 50, stdin);
+                        bufferAno[strcspn(bufferAno, "\n")] = 0;
+
+                        if (!validarString(bufferAno)) {
+                            printf("ERRO: O ano nao pode ser vazio ou conter apenas espacos.\n");
+                        } else {
+                            if (sscanf(bufferAno, "%d", &biblioteca[quantidade].ano) == 1) {
+                                anoValido = 1;
+                            } else {
+                                printf("ERRO: Digite um numero valido para o ano.\n");
+                            }
+                        }
+                    } while (!anoValido);
+
+                    quantidade++;
+                    printf("Livro cadastrado com sucesso!\n");
                 }
                 break;
 
@@ -104,7 +139,7 @@ int main() {
 
             case 3: 
                 if (quantidade == 0) {
-                    printf("\nNenhuma livro cadastrado.\n");
+                    printf("\nNenhum livro cadastrado.\n");
                 } else {
                     printf("\n--- LISTA DE LIVROS ---\n");
                     printf("%-30s | %-30s | %s\n", "NOME", "AUTOR", "ANO");
@@ -131,3 +166,5 @@ int main() {
 
     return 0;
 }
+                       
+
