@@ -2,12 +2,26 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 typedef struct {
     char nome[50];
     char autor[50];
     int ano;
 } Livro;
+
+void limparTela() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+void esperarEnter() {
+    printf("\nPressione ENTER para voltar ao menu...");
+    getchar();
+}
 
 int validarString(char *str) {
     int i;
@@ -40,6 +54,8 @@ int main() {
     char matrizExibicao[10][3][50]; 
 
     do {
+        limparTela();
+        
         printf("\n--- SISTEMA DE BIBLIOTECA ---\n");
         printf("1. Cadastrar livros\n");
         printf("2. Excluir livros cadastrados\n");
@@ -52,6 +68,7 @@ int main() {
         if (validacao == 0) {
             printf("\nOpcao invalida! Tente novamente.\n");
             while(getchar() != '\n'); 
+            esperarEnter();
             continue; 
         }
 
@@ -67,7 +84,6 @@ int main() {
                     do {
                         printf("Nome do livro: ");
                         fgets(biblioteca[quantidade].nome, 50, stdin);
-                        
                         biblioteca[quantidade].nome[strcspn(biblioteca[quantidade].nome, "\n")] = 0;
 
                         if (!validarString(biblioteca[quantidade].nome)) {
@@ -78,7 +94,6 @@ int main() {
                     do {
                         printf("Nome do autor: ");
                         fgets(biblioteca[quantidade].autor, 50, stdin);
-                        
                         biblioteca[quantidade].autor[strcspn(biblioteca[quantidade].autor, "\n")] = 0;
 
                         if (!validarString(biblioteca[quantidade].autor)) {
@@ -104,8 +119,9 @@ int main() {
                     } while (!anoValido);
 
                     quantidade++;
-                    printf("Livro cadastrado com sucesso!\n");
+                    printf("\nLivro cadastrado com sucesso!\n");
                 }
+                esperarEnter();
                 break;
 
             case 2: 
@@ -137,13 +153,14 @@ int main() {
                         while(getchar() != '\n'); 
                     }
                 }
+                esperarEnter();
                 break;
 
             case 3: 
                 if (quantidade == 0) {
                     printf("\nNenhum livro cadastrado.\n");
                 } else {
-                    printf("\n--- LISTA DE LIVROS ---\n");
+                    printf("\n--- LISTA DE LIVROS (Matriz) ---\n");
                     printf("%-30s | %-30s | %s\n", "NOME", "AUTOR", "ANO");
                     printf("--------------------------------------------------------------------------\n");
                     
@@ -160,6 +177,7 @@ int main() {
                                matrizExibicao[i][2]);
                     }
                 }
+                esperarEnter();
                 break;
 
             case 4:
@@ -168,10 +186,12 @@ int main() {
 
             default:
                 printf("\nOpcao invalida! Tente novamente.\n");
+                esperarEnter();
         }
 
     } while (opcao != 4);
 
     return 0;
 }
+
 
