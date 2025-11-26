@@ -143,7 +143,7 @@ int main() {
                 if (quantidade == 0) {
                     printf("\nNenhum livro cadastrado.\n");
                 } else {
-                    printf("\n--- LISTA DE LIVROS (Matriz) ---\n");
+                    printf("\n--- LISTA DE LIVROS ---\n");
                     printf("%-30s | %-30s | %s\n", "NOME", "AUTOR", "ANO");
                     printf("--------------------------------------------------------------------------\n");
                     
