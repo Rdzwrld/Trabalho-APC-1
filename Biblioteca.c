@@ -1,4 +1,4 @@
- #include <stdio.h>
+#include <stdio.h>
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
@@ -36,6 +36,8 @@ int main() {
     int validacao;
     char bufferAno[50];
     int anoValido;
+    
+    char matrizExibicao[10][3][50]; 
 
     do {
         printf("\n--- SISTEMA DE BIBLIOTECA ---\n");
@@ -141,15 +143,21 @@ int main() {
                 if (quantidade == 0) {
                     printf("\nNenhum livro cadastrado.\n");
                 } else {
-                    printf("\n--- LISTA DE LIVROS ---\n");
+                    printf("\n--- LISTA DE LIVROS (Matriz) ---\n");
                     printf("%-30s | %-30s | %s\n", "NOME", "AUTOR", "ANO");
                     printf("--------------------------------------------------------------------------\n");
                     
                     for (i = 0; i < quantidade; i++) {
-                        printf("%-30s | %-30s | %d\n", 
-                               biblioteca[i].nome, 
-                               biblioteca[i].autor, 
-                               biblioteca[i].ano);
+                        strcpy(matrizExibicao[i][0], biblioteca[i].nome);
+                        strcpy(matrizExibicao[i][1], biblioteca[i].autor);
+                        sprintf(matrizExibicao[i][2], "%d", biblioteca[i].ano);
+                    }
+
+                    for (i = 0; i < quantidade; i++) {
+                        printf("%-30s | %-30s | %s\n", 
+                               matrizExibicao[i][0], 
+                               matrizExibicao[i][1], 
+                               matrizExibicao[i][2]);
                     }
                 }
                 break;
@@ -166,5 +174,4 @@ int main() {
 
     return 0;
 }
-                       
 
